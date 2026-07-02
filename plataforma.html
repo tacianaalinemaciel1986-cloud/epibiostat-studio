@@ -1,0 +1,699 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EpiBioStat Studio 7.2</title>
+<style>
+:root{
+  --bg:#f2f7fb;--card:#fff;--text:#17212f;--muted:#64748b;
+  --primary:#175a76;--primary2:#2c8aae;--soft:#e7f4fa;
+  --border:#d5e1ea;--green:#eaf8ee;--yellow:#fff7e6;--red:#fff1f2;
+  --shadow:0 8px 24px rgba(15,23,42,.08)
+}
+[data-theme="dark"]{
+  --bg:#0f172a;--card:#111827;--text:#e5e7eb;--muted:#94a3b8;
+  --primary:#67c7e8;--primary2:#38bdf8;--soft:#153447;
+  --border:#29384d;--green:#123524;--yellow:#3b2f12;--red:#3a1820
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+.app{display:grid;grid-template-columns:315px 1fr;min-height:100vh}
+.sidebar{background:linear-gradient(180deg,#103348,#175a76);color:white;padding:20px;position:sticky;top:0;height:100vh;overflow:auto}
+.logo{font-weight:900;font-size:22px;margin-bottom:6px}.sidebar p{font-size:13px;color:#d9edf6;line-height:1.45}
+.nav button{width:100%;margin:5px 0;text-align:left;background:rgba(255,255,255,.08);color:white;border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:11px;cursor:pointer}
+.nav button.active,.nav button:hover{background:white;color:#17435a}
+.content{padding:22px;overflow:auto}
+.topbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.search{flex:1;max-width:560px}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text);font-size:14px}
+textarea{min-height:76px;resize:vertical}
+button{border:0;border-radius:12px;background:var(--primary);color:white;font-weight:700;padding:11px 14px;cursor:pointer}
+button.secondary{background:var(--card);color:var(--primary);border:1px solid var(--border)}
+.section{display:none}.section.active{display:block}
+.hero{background:linear-gradient(135deg,var(--primary),var(--primary2));color:white;border-radius:22px;padding:26px;margin-bottom:18px;box-shadow:var(--shadow)}
+.hero h1{margin:0 0 8px;font-size:30px}.hero p{max-width:1100px;line-height:1.55;margin:0}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:19px;margin:16px 0;box-shadow:var(--shadow)}
+h2,h3{color:var(--primary);margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:0 4px 14px rgba(0,0,0,.04)}
+.icon{font-size:34px}.badge{display:inline-block;background:var(--soft);color:var(--primary);border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700;margin:3px}
+.small{font-size:13px;color:var(--muted);line-height:1.45}
+.result{background:var(--green);border-left:6px solid #2e7d32;padding:14px;border-radius:14px;margin-top:14px;line-height:1.55}
+.warn{background:var(--yellow);border-left:6px solid #d97706;padding:14px;border-radius:14px;margin-top:14px;line-height:1.55}
+.red{background:var(--red);border-left:6px solid #be123c;padding:14px;border-radius:14px;margin-top:14px;line-height:1.55}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{background:var(--soft);color:var(--primary)}
+details{background:rgba(125,160,190,.08);border:1px solid var(--border);border-radius:12px;padding:9px;margin:5px 0}
+summary{cursor:pointer;font-weight:700;color:var(--primary)}
+.flow{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:10px}
+.node{background:var(--soft);border:1px solid var(--border);border-radius:14px;padding:12px;text-align:center;font-size:13px}.node b{color:var(--primary)}
+.quizOpt{display:block;margin:8px 0;padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text);text-align:left}
+.quizOpt:hover{background:var(--soft)}
+.envelope{border:2px dashed var(--primary);border-radius:12px;padding:12px;text-align:center;background:var(--soft);margin:6px;display:inline-block;min-width:135px}
+.hidden{display:none}.footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
+@media(max-width:1050px){
+  .app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}
+  .grid,.grid2,.grid3,.grid4,.flow{grid-template-columns:1fr}
+  .topbar{flex-direction:column;align-items:stretch}
+}
+@media print{
+  .sidebar,.topbar,button{display:none!important}.app{display:block}.section{display:block}
+  .panel,.hero{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="logo">EpiBioStat Studio 7.2</div>
+  <p>Versão integrada: todos os módulos do Studio 4.0 + pergunta de pesquisa, confundidores, randomização e cálculo amostral.</p>
+  <div class="nav">
+    <button class="active" onclick="showSec('home',this)">🏠 Home</button>
+    <button onclick="showSec('aprender',this)">📖 Aprender</button>
+    <button onclick="showSec('pergunta',this)">❓ Pergunta de pesquisa</button>
+    <button onclick="showSec('ia',this)">🧠 IA Metodológica</button>
+    <button onclick="showSec('wizard',this)">🧭 Assistente</button>
+    <button onclick="showSec('dashboard',this)">📊 Dashboard</button>
+    <button onclick="showSec('bioestat',this)">📈 Bioestatística</button>
+    <button onclick="showSec('amostral',this)">🧮 Cálculo amostral</button>
+    <button onclick="showSec('randomizacao',this)">🎲 Randomização</button>
+    <button onclick="showSec('confundidores',this)">🧩 Confundidores</button>
+    <button onclick="showSec('vieses',this)">⚠️ Vieses</button>
+    <button onclick="showSec('medidas',this)">📐 Medidas</button>
+    <button onclick="showSec('artigos',this)">📚 Banco de artigos</button>
+    <button onclick="showSec('erros',this)">❌ Erros comuns</button>
+    <button onclick="showSec('quiz',this)">🏆 Quiz</button>
+    <button onclick="showSec('professor',this)">👨‍🏫 Professor</button>
+  </div>
+</aside>
+
+<main class="content">
+<div class="topbar">
+  <input class="search" id="globalSearch" placeholder="Pesquisar: pergunta, amostral, OR, Cox, randomização, viés...">
+  <button class="secondary" onclick="toggleTheme()">🌗 Tema</button>
+  <button class="secondary" onclick="window.print()">🖨️ PDF</button>
+  <button class="secondary" onclick="exportCSV()">⬇️ CSV</button>
+</div>
+
+<section id="home" class="section active">
+  <div class="hero"><h1>EpiBioStat Studio 7.2</h1><p>Plataforma educacional para transformar perguntas de pesquisa em delineamento, variáveis, confundidores, cálculo amostral, randomização, análise estatística, medidas de efeito, vieses e interpretação.</p></div>
+  <div class="grid">
+    <div class="card"><div class="icon">❓</div><h3>Pergunta</h3><p class="small">Define população, exposição, desfecho e melhor tipo de estudo.</p></div>
+    <div class="card"><div class="icon">🧮</div><h3>Cálculo amostral</h3><p class="small">Estimativas para prevalência, médias, proporções e perdas.</p></div>
+    <div class="card"><div class="icon">🎲</div><h3>Randomização</h3><p class="small">Sequência simples, blocos, estratos, envelopes e CONSORT.</p></div>
+    <div class="card"><div class="icon">📈</div><h3>Análise</h3><p class="small">Escolhe teste/modelo conforme variável e desenho.</p></div>
+  </div>
+  <div class="panel">
+    <h2>Mapa mental da decisão metodológica</h2>
+    <div class="flow">
+      <div class="node"><b>1</b><br>Pergunta</div><div class="node"><b>2</b><br>Variáveis</div>
+      <div class="node"><b>3</b><br>Confundidores</div><div class="node"><b>4</b><br>Delineamento</div>
+      <div class="node"><b>5</b><br>Amostra</div><div class="node"><b>6</b><br>Análise</div>
+      <div class="node"><b>7</b><br>Interpretação</div>
+    </div>
+  </div>
+</section>
+
+<section id="aprender" class="section">
+  <div class="hero"><h1>Aprender por módulos</h1><p>Resumo didático dos principais delineamentos.</p></div>
+  <div class="grid">
+    <div class="card"><h3>📸 Transversal</h3><span class="badge">Prevalência</span><span class="badge">Associação</span><p>Exposição e desfecho medidos em um único momento.</p><details><summary>Quando não usar</summary>Quando a pergunta exige incidência, risco temporal ou efeito causal robusto.</details></div>
+    <div class="card"><h3>⏳ Coorte</h3><span class="badge">Incidência</span><span class="badge">Risco</span><p>Parte da exposição e acompanha até o desfecho.</p><details><summary>Quando não usar</summary>Quando o desfecho é muito raro e o seguimento é inviável.</details></div>
+    <div class="card"><h3>🔎 Caso-controle</h3><span class="badge">Doença rara</span><span class="badge">OR</span><p>Parte do desfecho e investiga exposição passada.</p><details><summary>Quando não usar</summary>Quando a exposição não pode ser medida de forma confiável retrospectivamente.</details></div>
+    <div class="card"><h3>🧪 Ensaio clínico</h3><span class="badge">Intervenção</span><span class="badge">Randomização</span><p>Testa intervenção com grupo controle.</p><details><summary>Quando não usar</summary>Quando randomização é antiética ou inviável.</details></div>
+  </div>
+</section>
+
+<section id="pergunta" class="section">
+  <div class="hero"><h1>Pergunta de Pesquisa e Melhor Tipo de Estudo</h1><p>Estruture a pergunta e receba sugestão de delineamento, medida, análise e confundidores.</p></div>
+  <div class="panel">
+    <h2>1. Estruture sua pergunta</h2>
+    <div class="grid2">
+      <textarea id="pqPop" placeholder="População. Ex.: adultos com migrânea episódica"></textarea>
+      <textarea id="pqOutcome" placeholder="Variável dependente/desfecho. Ex.: incapacidade, dias de cefaleia/mês"></textarea>
+      <textarea id="pqExposure" placeholder="Variável independente/exposição/intervenção. Ex.: dor cervical, exercício terapêutico"></textarea>
+      <textarea id="pqKnownConf" placeholder="Confundidores já pensados. Ex.: idade, sexo, ansiedade, medicação"></textarea>
+    </div>
+    <div class="grid4" style="margin-top:12px">
+      <select id="pqType"><option value="">Tipo de pergunta</option><option value="prevalencia">Frequência/prevalência</option><option value="associacao">Associação</option><option value="risco">Incidência/risco</option><option value="passada">Exposição passada/desfecho raro</option><option value="intervencao">Intervenção</option><option value="diagnostico">Acurácia diagnóstica</option><option value="prognostico">Prognóstico/predição</option></select>
+      <select id="pqTime"><option value="">Há seguimento?</option><option value="nao">Não</option><option value="sim">Sim</option></select>
+      <select id="pqRand"><option value="">É possível randomizar?</option><option value="nao">Não</option><option value="sim">Sim</option></select>
+      <select id="pqRare"><option value="">Desfecho raro?</option><option value="nao">Não</option><option value="sim">Sim</option></select>
+    </div>
+    <button onclick="analisarPergunta()">Analisar pergunta</button>
+    <div id="pqResult" class="result hidden"></div>
+  </div>
+  <div class="panel">
+    <h2>Exemplos rápidos</h2>
+    <table><thead><tr><th>Tipo</th><th>Exemplo</th><th>Melhor estudo</th><th>Medida</th><th>Confundidores comuns</th></tr></thead><tbody>
+      <tr><td>Prevalência</td><td>Prevalência de dor cervical em pessoas com migrânea?</td><td>Transversal</td><td>Prevalência + IC95%</td><td>Idade, sexo, local, escolaridade, comorbidades.</td></tr>
+      <tr><td>Associação</td><td>Dor cervical está associada à incapacidade?</td><td>Transversal analítico ou coorte</td><td>RP/OR ou RR</td><td>Idade, sexo, gravidade basal, medicação, ansiedade/depressão.</td></tr>
+      <tr><td>Risco</td><td>Alodinia prediz cronificação?</td><td>Coorte</td><td>RR, IRR ou HR</td><td>Frequência basal, medicação, sono, comorbidades.</td></tr>
+      <tr><td>Intervenção</td><td>Exercício reduz dias de cefaleia?</td><td>Ensaio clínico randomizado</td><td>Diferença média, RR, NNT</td><td>Baseline, centro, gravidade, medicação.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<section id="ia" class="section">
+  <div class="hero"><h1>IA Metodológica</h1><p>Digite uma ideia de estudo. A plataforma identifica desenho, análise, medidas e vieses prováveis.</p></div>
+  <div class="panel">
+    <textarea id="iaText" placeholder="Ex.: Quero estudar se exercício cervical reduz dias de migrânea em 8 semanas..."></textarea>
+    <button onclick="iaMetodo()">Analisar ideia</button>
+    <div id="iaResult" class="result hidden"></div>
+  </div>
+</section>
+
+<section id="wizard" class="section">
+  <div class="hero"><h1>Assistente passo a passo</h1><p>Construa uma recomendação a partir da pergunta e das variáveis.</p></div>
+  <div class="panel">
+    <div class="grid2">
+      <textarea id="pop" placeholder="População"></textarea><textarea id="dep" placeholder="Desfecho"></textarea>
+      <textarea id="ind" placeholder="Exposição/intervenção"></textarea><textarea id="conf" placeholder="Confundidores"></textarea>
+    </div>
+    <div class="grid3" style="margin-top:12px">
+      <select id="obj"><option value="">Objetivo</option><option value="prevalencia">Prevalência</option><option value="associacao">Associação</option><option value="incidencia">Incidência/risco</option><option value="rara">Doença rara/exposição passada</option><option value="intervencao">Intervenção</option></select>
+      <select id="tempo"><option value="">Temporalidade</option><option value="nao">Um momento</option><option value="sim">Seguimento</option></select>
+      <select id="random"><option value="">Randomização</option><option value="sim">Possível</option><option value="nao">Não possível</option></select>
+    </div>
+    <button onclick="wizard()">Gerar recomendação</button>
+    <div id="wizResult" class="result hidden"></div>
+  </div>
+</section>
+
+<section id="dashboard" class="section">
+  <div class="hero"><h1>Dashboard de consulta rápida</h1><p>Delineamento, pergunta, medidas, modelos e vieses-chave.</p></div>
+  <div class="panel">
+    <table><thead><tr><th>Estudo</th><th>Pergunta</th><th>Medidas</th><th>Modelos</th><th>Vieses</th></tr></thead><tbody>
+      <tr><td>Transversal</td><td>Qual a prevalência? Há associação?</td><td>Prevalência, RP, OR, IC95%</td><td>Qui-quadrado, Poisson robusta, logística</td><td>Seleção, informação, causalidade reversa</td></tr>
+      <tr><td>Coorte</td><td>Há maior risco/incidência?</td><td>RR, IRR, HR, IC95%</td><td>Cox, Poisson, modelos mistos</td><td>Perdas, detecção, tempo imortal</td></tr>
+      <tr><td>Caso-controle</td><td>A exposição foi mais comum nos casos?</td><td>OR, IC95%</td><td>Regressão logística</td><td>Seleção, memória, Berkson</td></tr>
+      <tr><td>Ensaio clínico</td><td>A intervenção funciona?</td><td>Diferença média, RR, NNT, IC95%</td><td>ITT, ANCOVA, modelos mistos, GEE</td><td>Alocação, performance, detecção, atrito</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+
+
+<section id="bioestat" class="section">
+  <div class="hero"><h1>Simulador de Bioestatística — Transversal, Caso-controle, Coorte e Ensaio Clínico</h1><p>Este módulo foi ampliado para orientar a escolha da análise estatística nos quatro delineamentos principais, mantendo todos os demais módulos da plataforma inalterados.</p></div>
+  <div class="panel">
+    <h2>1. Defina o desenho, o desfecho e a estrutura dos dados</h2>
+    <div class="grid3">
+      <select id="tipoEstudoBio">
+        <option value="">Tipo de estudo</option>
+        <option value="transversal">Transversal</option>
+        <option value="casocontrole">Caso-controle</option>
+        <option value="coorte">Coorte</option>
+        <option value="ensaio">Ensaio clínico</option>
+      </select>
+      <select id="tipoDep">
+        <option value="">Tipo de desfecho/variável principal</option>
+        <option value="binaria">Binário/categórico</option>
+        <option value="continua">Contínuo</option>
+        <option value="ordinal">Ordinal</option>
+        <option value="contagem">Contagem</option>
+        <option value="tempo">Tempo até evento</option>
+        <option value="repetida">Medidas repetidas/longitudinais</option>
+      </select>
+      <select id="grupo">
+        <option value="">Estrutura dos dados</option>
+        <option value="2">2 grupos</option>
+        <option value="3">3 ou mais grupos</option>
+        <option value="pareado">Pareado/matching/antes-depois</option>
+        <option value="ajuste">Precisa ajustar confundidores/baseline</option>
+      </select>
+    </div>
+    <div class="grid3" style="margin-top:12px">
+      <select id="dist">
+        <option value="">Distribuição/condição</option>
+        <option value="normal">Contínuo aproximadamente normal</option>
+        <option value="naonormal">Contínuo não normal/assimétrico</option>
+        <option value="superdispersao">Contagem com superdispersão</option>
+        <option value="desfechocomum">Desfecho comum</option>
+        <option value="na">Não se aplica</option>
+      </select>
+      <select id="tempoBio">
+        <option value="">Há tempo de seguimento?</option>
+        <option value="nao">Não</option>
+        <option value="sim">Sim</option>
+      </select>
+      <select id="analiseBio">
+        <option value="">Estratégia analítica</option>
+        <option value="descritiva">Descritiva</option>
+        <option value="bruta">Associação bruta</option>
+        <option value="ajustada">Análise ajustada</option>
+        <option value="itt">Intenção de tratar</option>
+        <option value="sensibilidade">Análise de sensibilidade</option>
+      </select>
+    </div>
+    <button onclick="teste()">Sugerir análise estatística</button>
+    <div id="testResult" class="result hidden"></div>
+  </div>
+
+  <div class="panel">
+    <h2>2. Guia rápido por delineamento</h2>
+    <table>
+      <thead><tr><th>Estudo</th><th>Desfecho/variável</th><th>Análise indicada</th><th>Medida</th><th>Alerta metodológico</th></tr></thead>
+      <tbody>
+        <tr><td><b>Transversal</b></td><td>Prevalência/desfecho binário</td><td>Prevalência com IC95%; Poisson robusta para associação ajustada</td><td>Prevalência, RP, IC95%</td><td>Não afirmar causalidade; atenção à causalidade reversa.</td></tr>
+        <tr><td><b>Transversal</b></td><td>Desfecho contínuo</td><td>Teste t/ANOVA, Mann-Whitney/Kruskal-Wallis ou regressão linear</td><td>Diferença média, β, IC95%</td><td>Checar distribuição, outliers e confundidores.</td></tr>
+        <tr><td><b>Caso-controle</b></td><td>Exposição categórica</td><td>Qui-quadrado/Fisher e regressão logística</td><td>OR, IC95%</td><td>Não calcula incidência/prevalência; cuidado com controles.</td></tr>
+        <tr><td><b>Caso-controle</b></td><td>Exposição contínua</td><td>Regressão logística; t/Mann-Whitney apenas descritivo</td><td>OR por unidade ou categoria, IC95%</td><td>Evitar interpretar OR como RR.</td></tr>
+        <tr><td><b>Coorte</b></td><td>Binário</td><td>Poisson robusta, log-binomial ou logística</td><td>RR, OR, IC95%</td><td>Controlar confundidores e perdas de seguimento.</td></tr>
+        <tr><td><b>Coorte</b></td><td>Tempo até evento</td><td>Kaplan-Meier, Log-rank e Cox</td><td>HR, IC95%</td><td>Verificar proporcionalidade dos riscos.</td></tr>
+        <tr><td><b>Ensaio clínico</b></td><td>Contínuo pós-intervenção</td><td>ANCOVA ajustada pelo baseline</td><td>Diferença média ajustada, IC95%</td><td>Preferir análise por intenção de tratar.</td></tr>
+        <tr><td><b>Ensaio clínico</b></td><td>Longitudinal</td><td>Modelos mistos ou GEE</td><td>Interação grupo×tempo, IC95%</td><td>Considerar perdas, adesão e dados ausentes.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>3. Alertas por desenho</h2>
+    <div class="warn">
+      <b>Transversal:</b> use prevalência, RP e IC95%; evite causalidade.<br><br>
+      <b>Caso-controle:</b> a medida central é OR; não estime incidência ou prevalência diretamente.<br><br>
+      <b>Coorte:</b> priorize incidência, RR, IRR ou HR; descreva perdas e controle de confundidores.<br><br>
+      <b>Ensaio clínico:</b> priorize intenção de tratar, ajuste pelo baseline quando indicado e modelos longitudinais para medidas repetidas.
+    </div>
+  </div>
+</section>
+
+
+<section id="amostral" class="section">
+  <div class="hero"><h1>Módulo de Cálculo Amostral</h1><p>Estimativas didáticas para estudos transversais, comparação de médias/proporções e ajuste por perdas. Para uso real em pesquisa, confirmar em software específico e com bioestatístico.</p></div>
+  <div class="panel">
+    <h2>1. Escolha o cenário</h2>
+    <div class="grid4">
+      <select id="ssType" onchange="toggleSampleFields()">
+        <option value="prevalencia">Transversal: estimar prevalência</option>
+        <option value="duasMedias">Ensaio/coorte: comparar duas médias</option>
+        <option value="duasProporcoes">Comparar duas proporções</option>
+      </select>
+      <select id="ssAlpha"><option value="1.96">α=0,05 (95%)</option><option value="2.576">α=0,01 (99%)</option><option value="1.645">α=0,10 (90%)</option></select>
+      <select id="ssPower"><option value="0.84">Poder 80%</option><option value="1.28">Poder 90%</option><option value="1.645">Poder 95%</option></select>
+      <input id="ssLoss" type="number" value="20" min="0" placeholder="Perdas %">
+    </div>
+    <div id="prevFields" class="grid3" style="margin-top:12px">
+      <input id="prevP" type="number" value="50" min="0" max="100" placeholder="Prevalência esperada (%)">
+      <input id="prevD" type="number" value="5" min="0.1" placeholder="Erro aceitável (%)">
+      <input id="prevDeff" type="number" value="1" min="1" step="0.1" placeholder="Efeito do desenho">
+    </div>
+    <div id="meanFields" class="grid3 hidden" style="margin-top:12px">
+      <input id="meanSd" type="number" value="10" min="0.1" placeholder="Desvio-padrão esperado">
+      <input id="meanDelta" type="number" value="5" min="0.1" placeholder="Diferença mínima relevante">
+      <input id="meanRatio" type="number" value="1" min="1" placeholder="Razão grupo controle/intervenção">
+    </div>
+    <div id="propFields" class="grid3 hidden" style="margin-top:12px">
+      <input id="prop1" type="number" value="40" min="0" max="100" placeholder="Proporção grupo 1 (%)">
+      <input id="prop2" type="number" value="25" min="0" max="100" placeholder="Proporção grupo 2 (%)">
+      <input id="propRatio" type="number" value="1" min="1" placeholder="Razão controle/intervenção">
+    </div>
+    <button onclick="calcularAmostra()">Calcular amostra</button>
+    <div id="sampleResult" class="result hidden"></div>
+  </div>
+  <div class="panel">
+    <h2>Como interpretar</h2>
+    <table><thead><tr><th>Cenário</th><th>Principais parâmetros</th><th>Alerta</th></tr></thead><tbody>
+      <tr><td>Prevalência</td><td>Prevalência esperada, erro aceitável, IC95%, perdas.</td><td>Se não souber prevalência, usar 50% é conservador.</td></tr>
+      <tr><td>Duas médias</td><td>Desvio-padrão, diferença mínima relevante, α e poder.</td><td>A diferença mínima deve ser clinicamente relevante.</td></tr>
+      <tr><td>Duas proporções</td><td>Proporção esperada em cada grupo, α e poder.</td><td>Diferenças pequenas exigem amostras maiores.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<section id="randomizacao" class="section">
+  <div class="hero"><h1>Módulo de Randomização</h1><p>Gere sequências simples, em blocos, estratificadas, envelopes e texto CONSORT.</p></div>
+  <div class="panel">
+    <h2>1. Configuração</h2>
+    <div class="grid4">
+      <input type="number" id="randN" value="30" min="2" placeholder="N total">
+      <select id="randGroups"><option value="2">2 grupos</option><option value="3">3 grupos</option><option value="4">4 grupos</option></select>
+      <select id="randType"><option value="simple">Simples</option><option value="block">Blocos</option><option value="stratified">Estratificada + blocos</option></select>
+      <select id="blockSize"><option value="4">Bloco 4</option><option value="6">Bloco 6</option><option value="8">Bloco 8</option></select>
+    </div>
+    <div class="grid3" style="margin-top:12px">
+      <input id="groupNames" value="Intervenção,Controle,Grupo C,Grupo D" placeholder="Nomes dos grupos">
+      <input id="seed" value="2026" placeholder="Semente">
+      <select id="concealment"><option value="envelopes opacos, sequencialmente numerados e lacrados">Envelopes opacos</option><option value="sistema eletrônico centralizado">Sistema eletrônico</option><option value="REDCap">REDCap</option></select>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>2. Estratificação opcional</h2>
+    <div class="grid3">
+      <input id="strat1Name" placeholder="Estrato 1: Sexo"><input id="strat1Levels" placeholder="Feminino|Masculino">
+      <input id="strat2Name" placeholder="Estrato 2: Migrânea"><input id="strat2Levels" placeholder="Crônica|Episódica">
+      <input id="strat3Name" placeholder="Estrato 3: Idade"><input id="strat3Levels" placeholder="18-40|41-65">
+    </div>
+    <button onclick="generateRandomization()">🎲 Gerar sequência</button>
+    <button class="secondary" onclick="downloadRandomCSV()">⬇️ CSV</button>
+    <button class="secondary" onclick="makeEnvelopes()">📦 Envelopes</button>
+    <button class="secondary" onclick="generateConsortText()">📝 CONSORT</button>
+    <div id="randSummary" class="result hidden"></div>
+  </div>
+  <div class="panel"><h2>Sequência</h2><div id="randTable" class="small">Nenhuma sequência gerada.</div></div>
+  <div class="panel"><h2>Envelopes</h2><div id="envelopes" class="small">Clique em “Envelopes”.</div></div>
+  <div class="panel"><h2>Texto metodológico</h2><div id="consortText" class="warn">Clique em “CONSORT”.</div></div>
+</section>
+
+<section id="confundidores" class="section">
+  <div class="hero"><h1>Confundidores por Tipo de Pesquisa</h1><p>Confundidor deve estar associado à exposição e ao desfecho, sem estar na cadeia causal principal.</p></div>
+  <div class="panel">
+    <table><thead><tr><th>Pesquisa</th><th>Confundidores frequentes</th><th>Como controlar</th><th>Erro comum</th></tr></thead><tbody>
+      <tr><td>Transversal</td><td>Idade, sexo, escolaridade, renda, local de coleta, comorbidades, medicação, estilo de vida.</td><td>Estratificação, Poisson robusta, logística.</td><td>Ajustar variáveis sem justificativa teórica.</td></tr>
+      <tr><td>Coorte</td><td>Gravidade basal, risco basal, tratamento, tempo de seguimento, adesão, comorbidades.</td><td>Cox/Poisson ajustado, escore de propensão, análise de perdas.</td><td>Não controlar diferenças basais.</td></tr>
+      <tr><td>Caso-controle</td><td>Origem dos controles, acesso ao diagnóstico, fatores socioeconômicos, comorbidades.</td><td>Pareamento, logística ajustada, logística condicional.</td><td>Selecionar controles inadequados.</td></tr>
+      <tr><td>Ensaio clínico</td><td>Baseline, centro, gravidade, medicação, adesão, terapeuta/avaliador.</td><td>Randomização, sigilo, cegamento, ANCOVA, modelos mistos, ITT.</td><td>Ajustar variáveis pós-randomização sem justificativa.</td></tr>
+    </tbody></table>
+    <div class="warn"><b>Regra didática:</b> escolha confundidores por teoria, literatura e DAGs; não apenas por p-valor.</div>
+  </div>
+</section>
+
+<section id="vieses" class="section">
+  <div class="hero"><h1>Mapa de vieses</h1><p>Vieses por delineamento e formas de minimizar.</p></div>
+  <div class="grid2">
+    <div class="card"><h3>Transversal</h3><p>Seleção, não resposta, informação, confundimento, causalidade reversa, sobrevivência.</p></div>
+    <div class="card"><h3>Coorte</h3><p>Perdas de seguimento, detecção, classificação incorreta, confundimento, tempo imortal.</p></div>
+    <div class="card"><h3>Caso-controle</h3><p>Seleção, memória, entrevistador, Berkson, pareamento inadequado.</p></div>
+    <div class="card"><h3>Ensaio clínico</h3><p>Randomização, alocação, performance, detecção, atrito, relato seletivo.</p></div>
+  </div>
+</section>
+
+<section id="medidas" class="section">
+  <div class="hero"><h1>Medidas de associação e efeito</h1><p>Interpretação rápida.</p></div>
+  <div class="panel">
+    <table><thead><tr><th>Medida</th><th>Uso</th><th>Interpretação</th><th>Atenção</th></tr></thead><tbody>
+      <tr><td>RP</td><td>Transversal</td><td>Razão de prevalências</td><td>Não define temporalidade.</td></tr>
+      <tr><td>OR</td><td>Caso-controle/logística</td><td>Razão de chances</td><td>Superestima RR se desfecho comum.</td></tr>
+      <tr><td>RR</td><td>Coorte/ensaio</td><td>Razão entre riscos</td><td>Exige risco/incidência.</td></tr>
+      <tr><td>HR</td><td>Sobrevivência</td><td>Razão instantânea de risco</td><td>Exige riscos proporcionais.</td></tr>
+      <tr><td>NNT</td><td>Ensaio clínico</td><td>Número necessário para tratar</td><td>Depende do risco basal.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<section id="artigos" class="section">
+  <div class="hero"><h1>Banco de exemplos de artigos</h1><p>Modelos de análise para discussão em aula.</p></div>
+  <div class="grid2">
+    <div class="card"><h3>Cephalalgia / Headache</h3><p class="small">Exemplos em migrânea, incapacidade, dor cervical e impacto funcional.</p></div>
+    <div class="card"><h3>BMJ / Lancet / NEJM</h3><p class="small">Ensaios clínicos com CONSORT, ITT e medidas de efeito.</p></div>
+    <div class="card"><h3>Neurology</h3><p class="small">Coortes, risco, incidência e modelos de Cox.</p></div>
+    <div class="card"><h3>JAMA</h3><p class="small">Modelos ajustados e interpretação clínica.</p></div>
+  </div>
+</section>
+
+<section id="erros" class="section">
+  <div class="hero"><h1>Erros comuns</h1><p>O que o aluno mais erra e como corrigir.</p></div>
+  <div class="grid2">
+    <div class="card"><h3>❌ Começar pelo teste</h3><p>Correção: começar pela pergunta, desfecho e delineamento.</p></div>
+    <div class="card"><h3>❌ OR em transversal com desfecho comum</h3><p>Correção: preferir Razão de Prevalência por Poisson robusta.</p></div>
+    <div class="card"><h3>❌ Ignorar confundidores</h3><p>Correção: definir confundidores teoricamente e ajustar no modelo.</p></div>
+    <div class="card"><h3>❌ Interpretar p-valor sozinho</h3><p>Correção: relatar IC95%, tamanho do efeito e relevância clínica.</p></div>
+    <div class="card"><h3>❌ Não checar pressupostos</h3><p>Correção: avaliar resíduos, variâncias, outliers e alternativas robustas.</p></div>
+    <div class="card"><h3>❌ Associação como causalidade</h3><p>Correção: discutir temporalidade, viés e plausibilidade.</p></div>
+  </div>
+</section>
+
+<section id="quiz" class="section">
+  <div class="hero"><h1>Quiz inteligente</h1><p>Teste rápido para fixação.</p></div>
+  <div class="panel">
+    <h3>Um pesquisador quer estimar a prevalência de dor cervical em pessoas com migrânea. Qual delineamento é mais adequado?</h3>
+    <button class="quizOpt" onclick="quiz(false)">Coorte</button>
+    <button class="quizOpt" onclick="quiz(false)">Caso-controle</button>
+    <button class="quizOpt" onclick="quiz(true)">Transversal</button>
+    <button class="quizOpt" onclick="quiz(false)">Ensaio clínico</button>
+    <div id="quizResult" class="result hidden"></div>
+  </div>
+</section>
+
+<section id="professor" class="section">
+  <div class="hero"><h1>Modo professor</h1><p>Roteiro para aula, seminário ou monitoria.</p></div>
+  <div class="panel">
+    <ol>
+      <li>Apresente uma pergunta real.</li><li>Identifique população, VD, VI e confundidores.</li>
+      <li>Discuta temporalidade e randomização.</li><li>Escolha o delineamento.</li>
+      <li>Estime amostra e perdas.</li><li>Escolha análise, medida e pressupostos.</li>
+      <li>Discuta vieses, IC95%, p-valor e relevância clínica.</li>
+    </ol>
+  </div>
+</section>
+
+<div class="footer">EpiBioStat Studio 7.2 — Material educacional interativo em HTML, CSS e JavaScript.</div>
+</main>
+</div>
+
+<script>
+let lastRandomization=[];
+
+function showSec(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function toggleTheme(){document.body.dataset.theme=document.body.dataset.theme==="dark"?"":"dark"}
+
+function analisarPergunta(){
+ const pop=document.getElementById('pqPop').value||"população definida";
+ const out=document.getElementById('pqOutcome').value||"desfecho";
+ const exp=document.getElementById('pqExposure').value||"exposição/intervenção";
+ const known=document.getElementById('pqKnownConf').value||"não informado";
+ const type=document.getElementById('pqType').value;
+ const time=document.getElementById('pqTime').value;
+ const rand=document.getElementById('pqRand').value;
+ const rare=document.getElementById('pqRare').value;
+ let design="",measure="",analysis="",conf="",warning="";
+ if(type==="prevalencia"){design="Estudo transversal";measure="Prevalência com IC95%";analysis="Descritiva; se houver associação, Poisson robusta para RP ou logística para OR.";conf="idade, sexo, escolaridade, renda, local, comorbidades, acesso, medicação e estilo de vida.";warning="Não interpretar prevalência como incidência."}
+ else if(type==="associacao"&&time==="nao"){design="Estudo transversal analítico";measure="RP, OR e IC95%";analysis="Qui-quadrado/Fisher; Poisson robusta ou logística ajustada.";conf="idade, sexo, gravidade basal, comorbidades, medicação, atividade física, sono, sintomas emocionais.";warning="Atenção à causalidade reversa."}
+ else if(type==="associacao"&&time==="sim"){design="Coorte";measure="RR, IRR, HR e IC95%";analysis="Cox, Poisson, binomial negativa ou modelos mistos.";conf="idade, sexo, risco basal, gravidade inicial, tratamento concomitante, adesão e comorbidades.";warning="Planeje perdas de seguimento."}
+ else if(type==="risco"||time==="sim"){design="Coorte";measure="Incidência, RR, IRR, HR e IC95%";analysis="Kaplan-Meier, Cox, Poisson/binomial negativa.";conf="idade, sexo, gravidade basal, risco basal, tratamento, adesão e tempo de seguimento.";warning="Garanta temporalidade."}
+ else if(type==="passada"||rare==="sim"){design="Caso-controle";measure="OR e IC95%";analysis="Regressão logística simples/múltipla ou condicional.";conf="idade, sexo, origem dos controles, acesso ao diagnóstico, fatores socioeconômicos e comorbidades.";warning="Atenção ao viés de seleção e memória."}
+ else if(type==="intervencao"&&rand==="sim"){design="Ensaio clínico randomizado";measure="Diferença média, RR, ARR, RRR, NNT e IC95%";analysis="ITT; ANCOVA, modelos mistos ou GEE.";conf="Randomização tende a balancear; considerar baseline, centro, gravidade inicial e medicação.";warning="Relatar randomização, sigilo, cegamento e perdas."}
+ else if(type==="intervencao"&&rand==="nao"){design="Quase-experimental ou coorte prospectiva";measure="Diferença média, RR/OR e IC95%";analysis="Modelos ajustados, modelos mistos/GEE ou escore de propensão.";conf="gravidade basal, baseline, motivação, acesso ao tratamento, adesão e comorbidades.";warning="Maior risco de confundimento por indicação."}
+ else if(type==="diagnostico"){design="Estudo de acurácia diagnóstica";measure="Sensibilidade, especificidade, AUC";analysis="Tabela 2x2 e curva ROC.";conf="espectro da doença, gravidade, comorbidades, padrão de referência e avaliador.";warning="Evite apenas casos típicos e controles saudáveis."}
+ else if(type==="prognostico"){design="Coorte prognóstica";measure="HR, RR, AUC e calibração";analysis="Cox, regressão logística/linear e validação interna.";conf="gravidade inicial, tratamento, idade, sexo, comorbidades, adesão e perdas.";warning="Diferencie prognóstico de causalidade."}
+ else{design="Ainda indefinido";measure="Defina pergunta, temporalidade e randomização";analysis="Depende do desfecho.";conf="comece por idade, sexo, gravidade basal, comorbidades e variáveis relacionadas à exposição e ao desfecho.";warning="Complete os campos."}
+ const structured=`Em ${pop}, ${exp} está associado(a) a ${out}, considerando possíveis confundidores?`;
+ document.getElementById('pqResult').innerHTML=`<b>Pergunta estruturada:</b><br>${structured}<br><br><b>Melhor tipo de estudo:</b> ${design}<br><b>Medida principal:</b> ${measure}<br><b>Análise sugerida:</b> ${analysis}<br><b>Confundidores prováveis:</b> ${conf}<br><b>Confundidores informados:</b> ${known}<br><br><b>Alerta metodológico:</b> ${warning}`;
+ document.getElementById('pqResult').classList.remove('hidden');
+}
+
+function iaMetodo(){
+ const t=(document.getElementById('iaText').value||"").toLowerCase();
+ let design="transversal analítico ou coorte, dependendo da temporalidade", model="regressão ajustada conforme desfecho", measure="RP/RR/OR + IC95%", bias="confundimento e seleção";
+ if(t.includes("exerc")||t.includes("interven")||t.includes("trat")){design="ensaio clínico randomizado, se houver randomização";model="ANCOVA, modelos mistos ou GEE; ITT";measure="diferença média, RR, NNT, IC95%";bias="alocação, performance, detecção e atrito"}
+ else if(t.includes("preval")){design="transversal";model="prevalência com IC95%; Poisson robusta para RP";measure="prevalência, RP, IC95%";bias="seleção, informação e causalidade reversa"}
+ else if(t.includes("risco")||t.includes("incid")){design="coorte";model="Cox, Poisson ou modelos mistos";measure="RR, IRR ou HR";bias="perdas, detecção e confundimento"}
+ else if(t.includes("rara")||t.includes("passada")){design="caso-controle";model="regressão logística";measure="OR e IC95%";bias="seleção, memória e Berkson"}
+ document.getElementById('iaResult').innerHTML=`<b>Delineamento sugerido:</b> ${design}<br><b>Modelo/análise:</b> ${model}<br><b>Medida:</b> ${measure}<br><b>Vieses a discutir:</b> ${bias}`;
+ document.getElementById('iaResult').classList.remove('hidden');
+}
+
+function wizard(){
+ const pop=document.getElementById('pop').value||"população definida",dep=document.getElementById('dep').value||"desfecho",ind=document.getElementById('ind').value||"exposição/intervenção",conf=document.getElementById('conf').value||"confundidores",obj=document.getElementById('obj').value,tempo=document.getElementById('tempo').value,rand=document.getElementById('random').value;
+ let design="indefinido",model="defina o desfecho",measure="IC95% e tamanho do efeito";
+ if(obj==="intervencao"&&rand==="sim"){design="Ensaio clínico randomizado";model="Randomização + ITT + ANCOVA/modelos mistos/GEE";measure="diferença média, RR, NNT"}
+ else if(obj==="prevalencia"){design="Transversal";model="prevalência + Poisson robusta";measure="prevalência, RP"}
+ else if(obj==="incidencia"||tempo==="sim"){design="Coorte";model="Cox/Poisson/modelos mistos";measure="RR, IRR, HR"}
+ else if(obj==="rara"){design="Caso-controle";model="regressão logística";measure="OR"}
+ else if(obj==="associacao"){design=tempo==="sim"?"Coorte":"Transversal analítico";model="modelo multivariável ajustado";measure="RP/RR/OR"}
+ document.getElementById('wizResult').innerHTML=`<b>Pergunta:</b> Em ${pop}, ${ind} está associado(a) a ${dep}, considerando ${conf}?<br><b>Delineamento:</b> ${design}<br><b>Análise:</b> ${model}<br><b>Medida:</b> ${measure}<br><b>Relatar:</b> IC95%, p-valor, pressupostos, vieses e relevância clínica.`;
+ document.getElementById('wizResult').classList.remove('hidden');
+}
+
+
+
+function teste(){
+ const estudo=document.getElementById('tipoEstudoBio').value;
+ const dep=document.getElementById('tipoDep').value;
+ const estrutura=document.getElementById('grupo').value;
+ const dist=document.getElementById('dist').value;
+ const tempo=document.getElementById('tempoBio').value;
+ const estrategia=document.getElementById('analiseBio').value;
+ let msg="Preencha o tipo de estudo, o tipo de desfecho/variável principal e a estrutura dos dados.";
+
+ if(estudo==="transversal"){
+   if(dep==="binaria"){
+     if(estrategia==="descritiva"){
+       msg="<b>Estudo transversal com desfecho binário/categórico:</b><br>Use prevalência absoluta e relativa com <b>IC95%</b>.<br><b>Exemplo:</b> prevalência de dor cervical, alodinia, incapacidade elevada ou uso de medicação.";
+     }else if(estrutura==="ajuste" || estrategia==="ajustada"){
+       if(dist==="desfechocomum"){
+         msg="<b>Transversal analítico com desfecho comum:</b><br>Prefira <b>regressão de Poisson com variância robusta</b> para estimar <b>Razão de Prevalência (RP)</b> com IC95%.<br><b>Ajuste:</b> idade, sexo, gravidade, medicação, comorbidades e outros confundidores teóricos.";
+       }else{
+         msg="<b>Transversal analítico com desfecho binário:</b><br>Use Poisson robusta para <b>RP</b> ou regressão logística para <b>OR</b>, especialmente quando o desfecho é raro.<br><b>Atenção:</b> OR pode superestimar a associação quando o desfecho é comum.";
+       }
+     }else{
+       msg="<b>Transversal com associação entre variáveis categóricas:</b><br>Use <b>Qui-quadrado</b> ou <b>Fisher</b> para análise bivariada.<br><b>Medida:</b> prevalência por grupo, RP/OR e IC95% quando aplicável.";
+     }
+   }else if(dep==="continua"){
+     if(estrutura==="ajuste"){
+       msg="<b>Transversal com desfecho contínuo e confundidores:</b><br>Use <b>regressão linear múltipla</b>.<br><b>Medida:</b> β ajustado, diferença média ajustada e IC95%.<br><b>Pressupostos:</b> linearidade, resíduos adequados, homocedasticidade e multicolinearidade baixa.";
+     }else if(estrutura==="2" && dist==="normal"){
+       msg="<b>Transversal com desfecho contínuo e 2 grupos:</b><br>Use <b>teste t de Student</b> se os pressupostos forem atendidos.<br><b>Alternativa:</b> Mann-Whitney se assimetria importante.";
+     }else if(estrutura==="3" && dist==="normal"){
+       msg="<b>Transversal com desfecho contínuo e 3+ grupos:</b><br>Use <b>ANOVA</b> com pós-hoc quando necessário.<br><b>Alternativa:</b> Kruskal-Wallis se distribuição assimétrica.";
+     }else{
+       msg="<b>Transversal com desfecho contínuo não normal/assimétrico:</b><br>Use <b>Mann-Whitney</b> para 2 grupos ou <b>Kruskal-Wallis</b> para 3+ grupos.<br><b>Relate:</b> mediana e intervalo interquartil.";
+     }
+   }else if(dep==="ordinal"){
+     msg="<b>Transversal com desfecho ordinal:</b><br>Use Mann-Whitney/Kruskal-Wallis para comparações ou <b>regressão ordinal</b> para análise ajustada.<br><b>Atenção:</b> verificar se a ordem das categorias tem significado clínico.";
+   }else if(dep==="contagem"){
+     msg="<b>Transversal com desfecho de contagem:</b><br>Use Poisson ou <b>binomial negativa</b> se houver superdispersão.<br><b>Medida:</b> razão de taxas/contagens com IC95%.";
+   }else{
+     msg="<b>Transversal:</b><br>O foco principal é prevalência e associação em um único momento. Evite inferência causal e discuta causalidade reversa.";
+   }
+ }
+
+ if(estudo==="casocontrole"){
+   if(dep==="binaria"){
+     if(estrutura==="pareado"){
+       msg="<b>Caso-controle pareado:</b><br>Use <b>regressão logística condicional</b>.<br><b>Medida:</b> OR pareado com IC95%.<br><b>Atenção:</b> respeitar as variáveis de pareamento na análise.";
+     }else if(estrutura==="ajuste" || estrategia==="ajustada"){
+       msg="<b>Caso-controle com análise ajustada:</b><br>Use <b>regressão logística múltipla</b>.<br><b>Medida:</b> OR ajustado com IC95%.<br><b>Confundidores:</b> idade, sexo, origem dos controles, comorbidades, acesso ao diagnóstico e fatores socioeconômicos.";
+     }else{
+       msg="<b>Caso-controle com exposição categórica:</b><br>Use Qui-quadrado/Fisher para descrição inicial e <b>regressão logística</b> para estimar OR.<br><b>Medida central:</b> Odds Ratio (OR) com IC95%.";
+     }
+   }else if(dep==="continua"){
+     msg="<b>Caso-controle com exposição contínua:</b><br>Use <b>regressão logística</b>, colocando status caso/controle como variável dependente e a exposição contínua como preditora.<br><b>Medida:</b> OR por unidade de aumento ou por categoria clinicamente definida.<br><b>Nota:</b> teste t/Mann-Whitney pode descrever diferença entre casos e controles, mas não substitui o modelo principal.";
+   }else if(dep==="ordinal"){
+     msg="<b>Caso-controle com exposição ordinal:</b><br>Use regressão logística com a exposição ordinal como preditora, ou categorias indicadoras se a relação não for linear.<br><b>Medida:</b> OR com IC95%.";
+   }else{
+     msg="<b>Caso-controle:</b><br>A variável de status caso/controle é o desfecho analítico. A análise principal geralmente é <b>regressão logística</b> para estimar OR.<br><b>Não calcule:</b> incidência ou prevalência diretamente a partir da amostra caso-controle.";
+   }
+ }
+
+ if(estudo==="coorte"){
+   if(dep==="binaria"){
+     msg="<b>Coorte com desfecho binário:</b><br>Use regressão de Poisson com variância robusta ou modelo log-binomial para estimar <b>Risco Relativo (RR)</b>. A regressão logística pode ser usada para <b>OR</b>, mas o OR pode superestimar o RR quando o desfecho é comum.<br><b>Ajuste:</b> incluir confundidores teóricos como idade, sexo, gravidade basal, comorbidades, tratamento concomitante e tempo de seguimento.";
+   }else if(dep==="continua"){
+     msg="<b>Coorte com desfecho contínuo:</b><br>Use regressão linear para um único tempo de avaliação ou <b>modelos mistos</b> quando houver medidas repetidas.<br><b>Medida:</b> β, diferença média ou diferença média ajustada com IC95%.<br><b>Pressupostos:</b> linearidade, resíduos adequados, homocedasticidade e baixa multicolinearidade.";
+   }else if(dep==="contagem"){
+     if(dist==="superdispersao"){
+       msg="<b>Coorte com desfecho de contagem e superdispersão:</b><br>Use <b>regressão binomial negativa</b>.<br><b>Medida:</b> IRR com IC95%.<br><b>Atenção:</b> incluir offset quando houver diferentes tempos de exposição/seguimento.";
+     }else{
+       msg="<b>Coorte com desfecho de contagem:</b><br>Use regressão de <b>Poisson</b>; se houver superdispersão, prefira binomial negativa.<br><b>Medida:</b> IRR com IC95%.";
+     }
+   }else if(dep==="tempo"){
+     msg="<b>Coorte com tempo até evento:</b><br>Use Kaplan-Meier para curvas, Log-rank para comparação inicial e <b>regressão de Cox</b> para análise ajustada.<br><b>Medida:</b> Hazard Ratio (HR) com IC95%.<br><b>Pressupostos:</b> proporcionalidade dos riscos e censura não informativa.";
+   }else if(dep==="repetida"){
+     msg="<b>Coorte longitudinal com medidas repetidas:</b><br>Use <b>modelos mistos</b> ou <b>GEE</b>.<br><b>Medida:</b> β, diferença média, RR/OR ajustado conforme família do modelo.<br><b>Atenção:</b> modelar correlação intraindivíduo e avaliar perdas de seguimento.";
+   }
+ }
+
+ if(estudo==="ensaio"){
+   if(dep==="binaria"){
+     msg="<b>Ensaio clínico com desfecho binário:</b><br>Use Poisson robusta/log-binomial para <b>RR</b> ou regressão logística para <b>OR</b>.<br><b>Relate também:</b> ARR, RRR e NNT quando aplicável.<br><b>Estratégia:</b> análise por intenção de tratar como principal, com análise por protocolo/sensibilidade se planejada.";
+   }else if(dep==="continua"){
+     if(estrutura==="pareado"){
+       msg="<b>Ensaio clínico com desfecho contínuo antes/depois:</b><br>Evite analisar apenas mudança simples quando houver baseline. Prefira <b>ANCOVA ajustada pelo valor basal</b> ou <b>modelos mistos</b> se houver múltiplos tempos.<br><b>Medida:</b> diferença média ajustada com IC95%.";
+     }else if(dist==="naonormal"){
+       msg="<b>Ensaio clínico com desfecho contínuo não normal:</b><br>Considere transformação, modelo robusto, regressão quantílica ou modelo misto adequado. Para comparação simples, Mann-Whitney pode ser descritivo, mas modelos ajustados são preferíveis.<br><b>Relate:</b> mediana/IIQ e estimativa ajustada quando possível.";
+     }else{
+       msg="<b>Ensaio clínico com desfecho contínuo:</b><br>Use <b>ANCOVA ajustada pelo baseline</b> quando houver medida basal. Para múltiplos tempos, prefira <b>modelos mistos</b> ou GEE.<br><b>Medida:</b> diferença média ajustada com IC95% e tamanho do efeito.";
+     }
+   }else if(dep==="contagem"){
+     msg="<b>Ensaio clínico com desfecho de contagem:</b><br>Use Poisson ou <b>binomial negativa</b> se houver superdispersão.<br><b>Exemplo:</b> número de crises, dias com dor ou eventos adversos.<br><b>Medida:</b> IRR com IC95%.";
+   }else if(dep==="tempo"){
+     msg="<b>Ensaio clínico com tempo até evento:</b><br>Use Kaplan-Meier, Log-rank e Cox.<br><b>Medida:</b> HR com IC95%.<br><b>Atenção:</b> manter análise por grupo randomizado e verificar proporcionalidade dos riscos.";
+   }else if(dep==="repetida"){
+     msg="<b>Ensaio clínico longitudinal:</b><br>Use <b>modelos mistos</b> ou <b>GEE</b>, preferencialmente com análise por intenção de tratar.<br><b>Medida:</b> diferença entre grupos ao longo do tempo, interação grupo×tempo e IC95%.<br><b>Atenção:</b> perdas, adesão, estrutura de correlação e análise de sensibilidade.";
+   }
+ }
+
+ if(estrategia==="itt" && estudo==="ensaio"){
+   msg += "<br><br><b>Complemento ITT:</b> todos os participantes randomizados devem ser analisados no grupo originalmente alocado, independentemente da adesão.";
+ }
+ if(estrategia==="sensibilidade"){
+   msg += "<br><br><b>Análise de sensibilidade:</b> útil para avaliar impacto de perdas, dados ausentes, aderência, seleção de controles e diferentes especificações do modelo.";
+ }
+ if(tempo==="sim" && dep!=="tempo" && (estudo==="coorte" || estudo==="ensaio")){
+   msg += "<br><br><b>Nota temporal:</b> como há seguimento, considere modelos longitudinais se o desfecho foi medido em mais de um tempo.";
+ }
+ if(estudo==="transversal"){
+   msg += "<br><br><b>Alerta transversal:</b> associação estatística não estabelece temporalidade nem causalidade.";
+ }
+ if(estudo==="casocontrole"){
+   msg += "<br><br><b>Alerta caso-controle:</b> a validade depende fortemente da seleção adequada dos controles e da qualidade da mensuração retrospectiva da exposição.";
+ }
+
+ document.getElementById('testResult').innerHTML="<b>Sugestão:</b><br>"+msg;
+ document.getElementById('testResult').classList.remove('hidden');
+}
+
+function zPowerLabel(z){if(Math.abs(z-0.84)<.01)return "80%"; if(Math.abs(z-1.28)<.01)return "90%"; return "95%"}
+function toggleSampleFields(){
+ const type=document.getElementById('ssType').value;
+ document.getElementById('prevFields').classList.toggle('hidden', type!=="prevalencia");
+ document.getElementById('meanFields').classList.toggle('hidden', type!=="duasMedias");
+ document.getElementById('propFields').classList.toggle('hidden', type!=="duasProporcoes");
+}
+function calcularAmostra(){
+ const type=document.getElementById('ssType').value;
+ const za=parseFloat(document.getElementById('ssAlpha').value);
+ const zb=parseFloat(document.getElementById('ssPower').value);
+ const loss=parseFloat(document.getElementById('ssLoss').value||0)/100;
+ let html="";
+ if(type==="prevalencia"){
+   const p=parseFloat(document.getElementById('prevP').value)/100;
+   const d=parseFloat(document.getElementById('prevD').value)/100;
+   const deff=parseFloat(document.getElementById('prevDeff').value||1);
+   const n0=(za*za*p*(1-p))/(d*d);
+   const n=Math.ceil(n0*deff/(1-loss));
+   html=`<b>Cenário:</b> estimar prevalência.<br><b>Amostra mínima ajustada:</b> ${n} participantes.<br><b>Sem perdas/design effect:</b> ${Math.ceil(n0)}.<br><b>Fórmula:</b> n = Z² × p(1-p) / d².`;
+ }else if(type==="duasMedias"){
+   const sd=parseFloat(document.getElementById('meanSd').value);
+   const delta=parseFloat(document.getElementById('meanDelta').value);
+   const nPer=Math.ceil((2*Math.pow(za+zb,2)*sd*sd)/(delta*delta));
+   const nAdj=Math.ceil(nPer/(1-loss));
+   html=`<b>Cenário:</b> comparação de duas médias.<br><b>Amostra por grupo ajustada:</b> ${nAdj}.<br><b>Total aproximado:</b> ${2*nAdj}.<br><b>Fórmula aproximada:</b> n/grupo = 2 × (Zα/2 + Zβ)² × σ² / Δ².`;
+ }else{
+   const p1=parseFloat(document.getElementById('prop1').value)/100;
+   const p2=parseFloat(document.getElementById('prop2').value)/100;
+   const pbar=(p1+p2)/2;
+   const num=Math.pow(za*Math.sqrt(2*pbar*(1-pbar)) + zb*Math.sqrt(p1*(1-p1)+p2*(1-p2)),2);
+   const den=Math.pow(p1-p2,2);
+   const nPer=Math.ceil(num/den);
+   const nAdj=Math.ceil(nPer/(1-loss));
+   html=`<b>Cenário:</b> comparação de duas proporções.<br><b>Amostra por grupo ajustada:</b> ${nAdj}.<br><b>Total aproximado:</b> ${2*nAdj}.<br><b>Parâmetros:</b> p1=${(p1*100).toFixed(1)}%, p2=${(p2*100).toFixed(1)}%, poder ${zPowerLabel(zb)}.`;
+ }
+ document.getElementById('sampleResult').innerHTML=html+"<br><br><b>Atenção:</b> esta é uma estimativa didática; confirme em G*Power, R, Stata, OpenEpi ou com bioestatístico.";
+ document.getElementById('sampleResult').classList.remove('hidden');
+}
+
+function seededRandom(seed){let x=Math.sin(seed++)*10000;return x-Math.floor(x)}
+function shuffle(array,seedObj){let arr=array.slice();for(let i=arr.length-1;i>0;i--){let j=Math.floor(seededRandom(seedObj.value++)*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+function getGroupNames(k){let names=document.getElementById('groupNames').value.split(',').map(x=>x.trim()).filter(Boolean);while(names.length<k){names.push("Grupo "+String.fromCharCode(65+names.length))}return names.slice(0,k)}
+function parseStrata(){let strata=[];[["strat1Name","strat1Levels"],["strat2Name","strat2Levels"],["strat3Name","strat3Levels"]].forEach(p=>{let name=document.getElementById(p[0]).value.trim();let levels=document.getElementById(p[1]).value.split('|').map(x=>x.trim()).filter(Boolean);if(name&&levels.length>0)strata.push({name,levels})});return strata}
+function cartesian(arrays){return arrays.reduce((a,b)=>a.flatMap(d=>b.map(e=>d.concat([e]))),[[]])}
+function generateBaseSequence(n,k,type,blockSize,names,seedObj){let seq=[];if(type==="simple"){for(let i=0;i<n;i++)seq.push(names[Math.floor(seededRandom(seedObj.value++)*k)])}else{let base=[];let reps=Math.floor(blockSize/k);for(let r=0;r<reps;r++){for(let g=0;g<k;g++)base.push(names[g])}while(base.length<blockSize)base.push(names[base.length%k]);while(seq.length<n)seq=seq.concat(shuffle(base,seedObj));seq=seq.slice(0,n)}return seq}
+function generateRandomization(){
+ const n=parseInt(document.getElementById('randN').value||"0"),k=parseInt(document.getElementById('randGroups').value),type=document.getElementById('randType').value,blockSize=parseInt(document.getElementById('blockSize').value),names=getGroupNames(k),seedObj={value:parseInt(document.getElementById('seed').value||"2026")};
+ let rows=[];if(!n||n<2){alert("Informe N total válido.");return}
+ if(type==="stratified"){
+   const strata=parseStrata();if(strata.length===0){alert("Preencha pelo menos um estrato.");return}
+   const combos=cartesian(strata.map(s=>s.levels));let id=1;
+   combos.forEach(combo=>{const per=Math.ceil(n/combos.length);const seq=generateBaseSequence(per,k,"block",blockSize,names,seedObj);seq.forEach((grp,i)=>{if(rows.length<n){let row={id:id++,group:grp,block:Math.floor(i/blockSize)+1,strata:{}};combo.forEach((level,idx)=>row.strata[strata[idx].name]=level);rows.push(row)}})})
+ }else{
+   const seq=generateBaseSequence(n,k,type,blockSize,names,seedObj);rows=seq.map((grp,i)=>({id:i+1,group:grp,block:type==="block"?Math.floor(i/blockSize)+1:"-",strata:{}}))
+ }
+ lastRandomization=rows;renderRandomTable(rows);const counts={};rows.forEach(r=>counts[r.group]=(counts[r.group]||0)+1);
+ document.getElementById('randSummary').innerHTML="<b>Sequência gerada.</b><br>Total: "+rows.length+" participantes.<br>Distribuição: "+Object.entries(counts).map(([g,c])=>`${g}: ${c}`).join(" | ");
+ document.getElementById('randSummary').classList.remove('hidden');
+}
+function renderRandomTable(rows){let strataKeys=[...new Set(rows.flatMap(r=>Object.keys(r.strata)))];let html="<table><thead><tr><th>ID</th><th>Alocação</th><th>Bloco</th>"+strataKeys.map(s=>`<th>${s}</th>`).join("")+"</tr></thead><tbody>";rows.forEach(r=>{html+=`<tr><td>${String(r.id).padStart(3,'0')}</td><td><b>${r.group}</b></td><td>${r.block}</td>`+strataKeys.map(s=>`<td>${r.strata[s]||""}</td>`).join("")+"</tr>"});html+="</tbody></table>";document.getElementById('randTable').innerHTML=html}
+function downloadRandomCSV(){if(lastRandomization.length===0){alert("Gere a sequência primeiro.");return}let strataKeys=[...new Set(lastRandomization.flatMap(r=>Object.keys(r.strata)))];const rows=[["ID","Alocacao","Bloco"].concat(strataKeys)];lastRandomization.forEach(r=>rows.push([String(r.id).padStart(3,'0'),r.group,r.block].concat(strataKeys.map(s=>r.strata[s]||""))));const csv=rows.map(r=>r.map(x=>'"'+String(x).replaceAll('"','""')+'"').join(",")).join("\n");downloadText(csv,"sequencia_randomizacao.csv","text/csv")}
+function makeEnvelopes(){if(lastRandomization.length===0){alert("Gere a sequência primeiro.");return}let html="";lastRandomization.slice(0,80).forEach(r=>{html+=`<div class="envelope"><b>Envelope ${String(r.id).padStart(3,'0')}</b><br><span class="small">Abrir após inclusão</span><br><br><b>${r.group}</b></div>`});document.getElementById('envelopes').innerHTML=html}
+function generateConsortText(){const type=document.getElementById('randType').value,k=parseInt(document.getElementById('randGroups').value),blockSize=document.getElementById('blockSize').value,concealment=document.getElementById('concealment').value,names=getGroupNames(k).join(" e ");let tipoPT=type==="simple"?"randomização simples":type==="block"?`randomização em blocos permutados de tamanho ${blockSize}`:`randomização estratificada com blocos permutados de tamanho ${blockSize}`;document.getElementById('consortText').innerHTML=`Os participantes foram alocados para ${names} utilizando ${tipoPT}, em sequência gerada por computador. O sigilo da alocação foi mantido por meio de ${concealment}. A sequência deve ser gerada por pesquisador independente, enquanto recrutamento e avaliação dos desfechos devem ser realizados por membros distintos da equipe, quando possível.`}
+
+function quiz(ok){const box=document.getElementById('quizResult');box.innerHTML= ok ? "<b>Correto.</b> Estudo transversal é adequado para estimar prevalência." : "<b>Revise.</b> Para prevalência, o delineamento mais adequado é o transversal.";box.classList.remove('hidden')}
+document.getElementById('globalSearch').addEventListener('keyup',()=>{const q=document.getElementById('globalSearch').value.toLowerCase();document.querySelectorAll('.card,.panel tr,details').forEach(el=>{el.style.display=!q||el.innerText.toLowerCase().includes(q)?"":"none"})})
+function downloadText(text,filename,type){const blob=new Blob([text],{type:type||"text/plain;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=filename;a.click()}
+function exportCSV(){const rows=[["Módulo","Conteúdo"],["Pergunta","melhor estudo; medida; confundidores"],["Cálculo amostral","prevalência; duas médias; duas proporções"],["Randomização","simples; blocos; estratificada"],["Bioestatística","testes e modelos"],["Vieses","por delineamento"]];const csv=rows.map(r=>r.map(x=>'"'+x+'"').join(",")).join("\n");downloadText(csv,"EpiBioStat_Studio_7_resumo.csv","text/csv;charset=utf-8")}
+</script>
+</body>
+</html>
